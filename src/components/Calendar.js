@@ -1,23 +1,9 @@
 import { useState, useEffect } from "react";
+import { useUser } from "../context/User";
+import data from "../data/information";
 
-const Calendar = () => {
-  const [day, setDay] = useState();
-  let date = new Date();
-  let grids = [];
-
-  const getDays = (date) => {
-    return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
-  };
-
-  const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-    date
-  );
-
-  const days = getDays(new Date(date.getFullYear(), date.getMonth()));
-
-  for (let i = 1; i <= days; i++) {
-    grids.push(i);
-  }
+const Calendar = ({data}) => {
+  const {month, days, date, setDay} = useUser()
 
   return (
     <div className="calendar-right">
@@ -25,15 +11,19 @@ const Calendar = () => {
         {month} {date.getFullYear()}
       </h1>
       <div className="calendar-grid">
-        {grids.map((grid) => (
+        {days.map((day) => (
           <div
             className="calendar-day-area"
-            id={`grid-cell-${grid}`}
-            onClick={() => setDay(grid)}
-            key={grid}
+            id={day}
+            onClick={() => setDay(+day)}
+            key={day}
           >
-            <p className="calendar-day">{grid}</p>
-            <p>Event</p>
+            <p className="calendar-day">{day}</p>
+            {data.events.map(event => (
+                <>{event.day === day ?
+                    <div>{event.name} from {event.start} to {event.end}</div>
+                    : null}</>
+            ))}
             <p>Event</p>
           </div>
         ))}

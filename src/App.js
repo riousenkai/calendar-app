@@ -6,15 +6,15 @@ import data from "./data/information.js";
 
 function App() {
   return (
-    <>
+    <div className="main">
       <Navigation users={data.users} />
       <Switch>
         <Route exact path="/">
-          <Home />
+          <Home data={data} />
         </Route>
       </Switch>
-      <Calendar />
-    </>
+      <Calendar data={data} />
+    </div>
   );
 }
 

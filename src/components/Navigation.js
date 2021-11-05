@@ -1,23 +1,30 @@
-import { useEffect, useState } from "react"
-import { useUser } from "../context/User"
+import { useEffect, useState } from "react";
+import { useUser } from "../context/User";
 
 const Navigation = ({ users }) => {
-    const { user, setUser } = useUser()
-    const [username, setUsername] = useState('Ted')
+  const { user, setUser } = useUser();
+  const [username, setUsername] = useState(users[0].name);
 
-    useEffect(() => {
-        const spec = users.find(ele => ele.id === user)
-        setUsername(spec.name)
-    }, [user])
+  useEffect(() => {
+    let spec = users.find((ele) => ele.id === +user);
+    setUsername(spec.name);
+  }, [user]);
 
-    return (
-        <div className="nav-main">
-            <div className="greeting">Hello! {username}</div>
-            <select onChange={(e) => setUser(e.target.value)}>
+  return (
+    <div className="nav-main">
+      <div className="greeting">Hello, {username}!</div>
+      <div className="change-user">
+        Change User:
+        <select onChange={(e) => setUser(e.target.value)} value={user}>
+          {users.map((user) => (
+            <option key={user.id} value={user.id}>
+              {user.name}
+            </option>
+          ))}
+        </select>
+      </div>
+    </div>
+  );
+};
 
-            </select>
-        </div>
-    )
-}
-
-export default Navigation
+export default Navigation;
