@@ -5,7 +5,7 @@ import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
-  const { user, setUser } = useUser();
+  const { user, setUser, setDay, setCurrMonth, setYear } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
@@ -31,8 +31,10 @@ const Navigation = ({ users }) => {
   const newEvent = (e) => {
     e.preventDefault();
 
+    let fullDate = eventDate.toString().split(" ")
+
     const m = data.months.find(
-      (month) => month.short === eventDate.toString().split(" ")[1]
+      (month) => month.short === fullDate[1]
     );
     const eDay = d(eventDate);
 
@@ -41,7 +43,7 @@ const Navigation = ({ users }) => {
     const newEventObj = {
       month: m.id,
       day: eDay,
-      year: 2021,
+      year: fullDate[3],
       start: eventStart,
       end: eventEnd,
       user: user,
@@ -50,6 +52,9 @@ const Navigation = ({ users }) => {
     };
 
     data.events.push(newEventObj);
+    setDay(eDay)
+    setCurrMonth(m.id)
+    setYear(fullDate[3])
   };
 
   return (
