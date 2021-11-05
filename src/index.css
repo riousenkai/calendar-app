@@ -49,3 +49,29 @@ body {
 .main {
   display: flex;
 }
+
+.add-img {
+  height: 25px;
+  width: 25px;
+}
+
+.add-img:active {
+  transform: translateY(3px);
+}
+
+.add-event {
+  width: max-content;
+  display: flex;
+}
+
+.add-img:hover {
+  cursor: pointer;
+}
+
+.hidden {
+  display: hidden !important;
+}
+
+textarea {
+  resize: none;
+}
