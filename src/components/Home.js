@@ -3,13 +3,12 @@ import { useUser } from "../context/User";
 
 const Home = ({data}) => {
     const [events, setEvents] = useState([])
-    const {month, day, user} = useUser()
+    const {month, day, user, currMonth, year} = useUser()
 
   useEffect(() => {
-    const eventList = data.events.filter(event => event.day === +day)
+    const eventList = data.events.filter(event => event.day === +day && event.month === currMonth && event.year === year)
     setEvents(eventList)
-    console.log(events)
-  }, [])
+  }, [day])
 
   const remove = () => {
 

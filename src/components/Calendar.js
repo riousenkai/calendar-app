@@ -1,17 +1,52 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../context/User";
-import data from "../data/information";
 
 const Calendar = ({ data }) => {
-  const { month, days, date, setDay } = useUser();
+  const { month, days, date, setDay, currMonth, setCurrMonth, year, setYear } =
+    useUser();
+
+  const [totalDays, setTotalDays] = useState([])
+
+  useEffect(() => {
+    let dayAmt = []
+    for (let i = 1; i <= +data.months[currMonth].days; i++) {
+      console.log(i)
+      dayAmt.push(i)
+    }
+    setTotalDays(dayAmt)
+  }, [currMonth])
+
+  const changeMonth = () => {
+    if (currMonth === 11) {
+      setCurrMonth(0);
+      setYear((year) => year + 1);
+    } else {
+      setCurrMonth((month) => month + 1);
+    }
+  };
 
   return (
     <div className="calendar-right">
       <h1 className="month">
-        {month} {date.getFullYear()}
+        {data.months[currMonth].month} {year}
       </h1>
+      <button onClick={() => changeMonth()}>{`>`}</button>
+      <select
+        id={0}
+        onChange={(e) =>
+          document
+            .getElementById(e.target.value)
+            .scrollIntoView({ behavior: "smooth" })
+        }
+        defaultValue="Jump to date..."
+      >
+        <option disabled={true}>Jump to date...</option>
+        {totalDays.map((day) => (
+          <option>{day}</option>
+        ))}
+      </select>
       <div className="calendar-grid">
-        {days.map((day) => (
+        {totalDays.map((day) => (
           <div
             className="calendar-day-area"
             id={day}
@@ -21,14 +56,16 @@ const Calendar = ({ data }) => {
             <p className="calendar-day">{day}</p>
             {data.events.map((event) => (
               <>
-                {event.day === day ? (
+                {event.day === day && event.month === currMonth && event.year === year ? (
                   <div>
                     {event.name} from {event.start} to {event.end}
                   </div>
                 ) : null}
               </>
             ))}
-            {!data.events.find((event) => event.day === day) ? (
+            {!data.events.find(
+              (event) => event.day === day && event.month === currMonth && event.year === year
+            ) ? (
               <div>No events.</div>
             ) : null}
           </div>
