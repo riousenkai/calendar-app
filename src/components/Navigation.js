@@ -5,35 +5,51 @@ import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
-  const { user, setUser, availDays } = useUser();
+  const { user, setUser } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
   const [eventDate, setEventDate] = useState();
   const [eventStart, setEventStart] = useState("09:00");
-  const [eventEnd, setEventEnd] = useState();
+  const [eventEnd, setEventEnd] = useState("09:30");
 
   useEffect(() => {
     let spec = users.find((ele) => ele.id === +user);
     setUsername(spec.name);
-    console.log(data.times[1]);
   }, [user]);
+
+  const d = (date) => {
+    let num = date.toString().split(" ")[2];
+
+    if (num[0] === "0") {
+      return +num[1];
+    } else {
+      return +num;
+    }
+  };
 
   const newEvent = (e) => {
     e.preventDefault();
 
+    const m = data.months.find(
+      (month) => month.short === eventDate.toString().split(" ")[1]
+    );
+    const eDay = d(eventDate);
+
     const duplicate = data.events.find((event) => event.start === 1);
 
     const newEventObj = {
-      month: 10,
-      day: 5,
+      month: m.id,
+      day: eDay,
       year: 2021,
-      start: "09:00",
-      end: "09:30",
-      user: 0,
-      name: "Test",
-      description: "Appointment with Michael",
+      start: eventStart,
+      end: eventEnd,
+      user: user,
+      name: eventName,
+      description: eventDesc,
     };
+
+    data.events.push(newEventObj);
   };
 
   return (
@@ -77,15 +93,15 @@ const Navigation = ({ users }) => {
           value={eventStart}
           onChange={(e) => setEventStart(e.target.value)}
         >
-          {data?.times?.map((time) => (
-            <option>{time}</option>
-          ))}
+          {data?.times?.map((time) =>
+            time !== "05:00" ? <option>{time}</option> : null
+          )}
         </select>
         End Date:
-        <select>
-         {data.times.map((time, i) => (
-           i > data.times.indexOf(eventStart) ? <option>{time}</option> : null
-         ))}
+        <select onChange={(e) => setEventEnd(e.target.value)} value={eventEnd}>
+          {data.times.map((time, i) =>
+            i > data.times.indexOf(eventStart) ? <option>{time}</option> : null
+          )}
         </select>
         <button>Submit</button>
       </form>
