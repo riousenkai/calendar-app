@@ -17,7 +17,7 @@ const Home = ({ data }) => {
     const allEvents = data.events.filter(d => d !== obj)
 
     data.events = allEvents
-    setDay(obj.day + 1)
+    setDay(obj.day)
     setCurrMonth(obj.month)
     setYear(obj.year)
   };
