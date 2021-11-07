@@ -9,13 +9,13 @@ import ebconfig from "./ebconfig";
 
 function Root() {
   return (
-    <EasybaseProvider ebconfig={ebconfig}>
-      <UserProvider>
-        <BrowserRouter>
+    <BrowserRouter>
+      <EasybaseProvider ebconfig={ebconfig}>
+        <UserProvider>
           <App />
-        </BrowserRouter>
-      </UserProvider>
-    </EasybaseProvider>
+        </UserProvider>
+      </EasybaseProvider>
+    </BrowserRouter>
   );
 }
 

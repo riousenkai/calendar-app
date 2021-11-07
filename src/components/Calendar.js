@@ -1,19 +1,21 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../context/User";
 
-const Calendar = ({ data }) => {
-  const { setDay, currMonth, setCurrMonth, year, setYear, eventsData, setEventsData } =
-    useUser();
+const Calendar = ({ data, eventsData }) => {
 
-  const [totalDays, setTotalDays] = useState([])
+  const { setDay, currMonth, setCurrMonth, year, setYear } = useUser();
+
+  const [totalDays, setTotalDays] = useState([]);
+
+  useEffect(() => {}, []);
 
   useEffect(() => {
-    let dayAmt = []
+    let dayAmt = [];
     for (let i = 1; i <= +data.months[currMonth].days; i++) {
-      dayAmt.push(i)
+      dayAmt.push(i);
     }
-    setTotalDays(dayAmt)
-  }, [currMonth])
+    setTotalDays(dayAmt);
+  }, [currMonth]);
 
   const changeMonth = () => {
     if (currMonth === 11) {
@@ -55,15 +57,18 @@ const Calendar = ({ data }) => {
             <p className="calendar-day">{day}</p>
             {eventsData.map((event) => (
               <>
-                {event.day === day && event.month === currMonth && event.year === year ? (
+                {event.dy === day &&
+                event.mon === currMonth &&
+                event.yr === year ? (
                   <div>
-                    {event.name} from {event.start} to {event.ending}
+                    {event.name} from {event.strt} to {event.ending}
                   </div>
                 ) : null}
               </>
             ))}
             {!eventsData.find(
-              (event) => event.day === day && event.month === currMonth && event.year === year
+              (event) =>
+                event.dy === day && event.mon === currMonth && event.yr === year
             ) ? (
               <div>No events.</div>
             ) : null}

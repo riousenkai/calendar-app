@@ -1,39 +1,39 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../context/User";
-import { useEasybase } from "easybase-react"
+import { useEasybase } from "easybase-react";
 
-const Home = ({ data }) => {
-  const { db } = useEasybase()
-  const [events, setEvents] = useState([]);
+const Home = ({ data, eventsData, setEventsData }) => {
+  console.log(eventsData);
+  const { db } = useEasybase();
   const [dateName, setDateName] = useState("");
   const { day, user, currMonth, year, setDay, setCurrMonth, setYear } =
     useUser();
-  const [eventsData, setEventsData] = useState([]);
 
   const finder = async () => {
     const eventList = await db("APPTS")
-      .return()
+      ?.return()
       .where({
-        month: currMonth,
-        day: day,
-        year: year,
+        mon: currMonth,
+        dy: day,
+        yr: year,
       })
       .all();
 
     let currDate = data.months.find((m) => m.id === currMonth);
     setDateName(currDate.month);
-    setEvents(eventList);
+    setEventsData(eventList);
   };
 
   useEffect(() => {
-    return finder();
+    finder();
   }, [day, currMonth]);
 
-  const remove = (obj) => {
-
-    setDay(obj.day);
-    setCurrMonth(obj.month);
-    setYear(obj.year);
+  const remove = async (obj) => {
+    await db("APPTS").delete().where({ obj }).one();
+    setDay(obj.dy);
+    setCurrMonth(obj.mon);
+    setYear(obj.yr);
+    finder();
   };
 
   return (
@@ -41,10 +41,11 @@ const Home = ({ data }) => {
       <p className="header-body">
         Appointments for {dateName} {day}, {year}
       </p>
-      {events.map((event) => (
+      {eventsData?.map((event) => (
         <div>
           <p>{event.name}</p>
-          {event.user === +user && (
+          {console.log(user, event)}
+          {+event.userid === +user && (
             <>
               <button>Edit</button>
               <button onClick={() => remove(event)}>Delete</button>
