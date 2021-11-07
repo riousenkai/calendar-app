@@ -15,7 +15,7 @@ const Home = ({ data }) => {
 
   const remove = (obj) => {
     const allEvents = data.events.filter(d => d !== obj)
-
+  
     data.events = allEvents
     setDay(obj.day)
     setCurrMonth(obj.month)

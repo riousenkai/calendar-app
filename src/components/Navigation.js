@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/User";
+import { useEasybase } from "easybase-react";
 import Calendar from "react-calendar";
 import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
@@ -46,7 +47,7 @@ const Navigation = ({ users }) => {
       year: fullDate[3],
       start: eventStart,
       end: eventEnd,
-      user: user,
+      user: +user,
       name: eventName,
       description: eventDesc,
     };
