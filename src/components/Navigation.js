@@ -55,10 +55,8 @@ const Navigation = ({ users }) => {
         event.day === eDay &&
         event.month === m.id &&
         event.year === Number(fullDate[3]) &&
-        (event.start >= eventStart && event.ending <= eventEnd)
+        (parseInt(event.start) >= parseInt(eventStart) && parseInt(event.ending) < parseInt(eventStart))
     );
-
-    console.log(duplicate)
 
     if (eventStart === eventEnd) {
       errs.push("End time cannot be at the same time as start time!");
