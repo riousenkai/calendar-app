@@ -7,15 +7,24 @@ import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
   const { db } = useEasybase();
-  const { user, setUser, setDay, setCurrMonth, setYear } = useUser();
+  const {
+    user,
+    setUser,
+    setDay,
+    setCurrMonth,
+    setYear,
+    eventsData,
+    setEventsData,
+  } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
   const [eventDate, setEventDate] = useState(new Date());
   const [eventStart, setEventStart] = useState("09:00");
   const [eventEnd, setEventEnd] = useState("09:30");
-  const [eventsData, setEventsData] = useState([]);
   const [errors, setErrors] = useState();
+
+  useEffect(() => {}, [eventsData]);
 
   const eventsDb = async () => {
     const events = await db("APPTS").return().all();
@@ -55,7 +64,8 @@ const Navigation = ({ users }) => {
         event.day === eDay &&
         event.month === m.id &&
         event.year === Number(fullDate[3]) &&
-        (parseInt(event.start) >= parseInt(eventStart) && parseInt(event.ending) < parseInt(eventStart))
+        parseInt(event.start) >= parseInt(eventStart) &&
+        parseInt(event.ending) <= parseInt(eventStart)
     );
 
     if (eventStart === eventEnd) {
@@ -65,23 +75,12 @@ const Navigation = ({ users }) => {
     }
 
     if (duplicate) {
-      errs.push("There is already an event scheduled for that timeframe.")
+      errs.push("There is already an event scheduled for that timeframe.");
     }
 
     if (errs.length > 0) {
       return setErrors(errs);
     }
-
-    const newEventObj = {
-      month: m.id,
-      day: eDay,
-      year: Number(fullDate[3]),
-      start: eventStart,
-      ending: eventEnd,
-      userId: +user,
-      name: eventName,
-      description: eventDesc,
-    };
 
     await db("APPTS")
       .insert({
@@ -94,11 +93,11 @@ const Navigation = ({ users }) => {
         name: eventName,
         description: eventDesc,
       })
-      .one();
+      .one()
+      .then(() => eventsDb());
 
-    setErrors()
+    setErrors();
 
-    data.events.push(newEventObj);
     setDay(eDay);
     setCurrMonth(m.id);
     setYear(fullDate[3]);

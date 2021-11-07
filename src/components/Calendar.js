@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useUser } from "../context/User";
 
 const Calendar = ({ data }) => {
-  const { month, days, date, setDay, currMonth, setCurrMonth, year, setYear } =
+  const { setDay, currMonth, setCurrMonth, year, setYear, eventsData, setEventsData } =
     useUser();
 
   const [totalDays, setTotalDays] = useState([])
@@ -10,7 +10,6 @@ const Calendar = ({ data }) => {
   useEffect(() => {
     let dayAmt = []
     for (let i = 1; i <= +data.months[currMonth].days; i++) {
-      console.log(i)
       dayAmt.push(i)
     }
     setTotalDays(dayAmt)
@@ -54,16 +53,16 @@ const Calendar = ({ data }) => {
             key={day}
           >
             <p className="calendar-day">{day}</p>
-            {data.events.map((event) => (
+            {eventsData.map((event) => (
               <>
                 {event.day === day && event.month === currMonth && event.year === year ? (
                   <div>
-                    {event.name} from {event.start} to {event.end}
+                    {event.name} from {event.start} to {event.ending}
                   </div>
                 ) : null}
               </>
             ))}
-            {!data.events.find(
+            {!eventsData.find(
               (event) => event.day === day && event.month === currMonth && event.year === year
             ) ? (
               <div>No events.</div>
