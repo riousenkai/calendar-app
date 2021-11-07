@@ -6,18 +6,24 @@ import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
-  const { db, e } = useEasybase()
+  const { db } = useEasybase();
   const { user, setUser, setDay, setCurrMonth, setYear } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
-  const [eventDate, setEventDate] = useState();
+  const [eventDate, setEventDate] = useState(new Date());
   const [eventStart, setEventStart] = useState("09:00");
   const [eventEnd, setEventEnd] = useState("09:30");
+  const [eventsData, setEventsData] = useState([]);
+  const [errors, setErrors] = useState();
 
+  const eventsDb = async () => {
+    const events = await db("APPTS").return().all();
+
+    setEventsData(events);
+  };
 
   useEffect(() => {
-
     let spec = users.find((ele) => ele.id === +user);
     setUsername(spec.name);
   }, [user]);
@@ -35,41 +41,69 @@ const Navigation = ({ users }) => {
   const newEvent = async (e) => {
     e.preventDefault();
 
-    let fullDate = eventDate.toString().split(" ")
+    eventsDb();
 
-    const m = data.months.find(
-      (month) => month.short === fullDate[1]
-    );
+    let fullDate = eventDate.toString().split(" ");
+
+    const m = data.months.find((month) => month.short === fullDate[1]);
     const eDay = d(eventDate);
 
-    const duplicate = data.events.find((event) => event.start === 1);
+    const errs = [];
+
+    const duplicate = eventsData.find(
+      (event) =>
+        event.day === eDay &&
+        event.month === m.id &&
+        event.year === Number(fullDate[3]) &&
+        (event.start >= eventStart && event.ending <= eventEnd)
+    );
+
+    console.log(duplicate)
+
+    if (eventStart === eventEnd) {
+      errs.push("End time cannot be at the same time as start time!");
+    } else if (eventStart > eventEnd) {
+      errs.push("Start time cannot be later than end time!");
+    }
+
+    if (duplicate) {
+      errs.push("There is already an event scheduled for that timeframe.")
+    }
+
+    if (errs.length > 0) {
+      return setErrors(errs);
+    }
 
     const newEventObj = {
       month: m.id,
       day: eDay,
-      year: +fullDate[3],
+      year: Number(fullDate[3]),
       start: eventStart,
-      end: eventEnd,
-      user: +user,
+      ending: eventEnd,
+      userId: +user,
       name: eventName,
       description: eventDesc,
     };
 
-    await db('EVENTS').insert({
-      month: m.id,
-      day: eDay,
-      year: +fullDate[3],
-      start: eventStart,
-      end: eventEnd,
-      user: +user,
-      name: eventName,
-      description: eventDesc,
-    }).one()
+    await db("APPTS")
+      .insert({
+        month: m.id,
+        day: eDay,
+        year: +fullDate[3],
+        start: eventStart,
+        ending: eventEnd,
+        userId: +user,
+        name: eventName,
+        description: eventDesc,
+      })
+      .one();
+
+    setErrors()
 
     data.events.push(newEventObj);
-    setDay(eDay)
-    setCurrMonth(m.id)
-    setYear(fullDate[3])
+    setDay(eDay);
+    setCurrMonth(m.id);
+    setYear(fullDate[3]);
   };
 
   return (
@@ -92,11 +126,13 @@ const Navigation = ({ users }) => {
           src="https://img.icons8.com/flat-round/64/000000/plus.png"
         />
       </div>
+      {errors && errors.map((error) => <div>{error}</div>)}
       <form className="add-event-form" onSubmit={(e) => newEvent(e)}>
         Event Name:
         <input
           value={eventName}
           onChange={(e) => setEventName(e.target.value)}
+          required
         />
         Description:
         <textarea
@@ -105,24 +141,28 @@ const Navigation = ({ users }) => {
         />
         <Calendar
           defaultValue={new Date()}
+          value={eventDate}
           minDate={new Date()}
           onChange={(e) => setEventDate(e)}
         />
         Start Date:
-        <select
+        <input
           value={eventStart}
+          type="time"
+          min="09:00"
+          max="16:30"
           onChange={(e) => setEventStart(e.target.value)}
-        >
-          {data?.times?.map((time) =>
-            time !== "05:00" ? <option>{time}</option> : null
-          )}
-        </select>
+          required
+        />
         End Date:
-        <select onChange={(e) => setEventEnd(e.target.value)} value={eventEnd}>
-          {data.times.map((time, i) =>
-            i > data.times.indexOf(eventStart) ? <option>{time}</option> : null
-          )}
-        </select>
+        <input
+          value={eventEnd}
+          type="time"
+          min="09:30"
+          max="17:00"
+          onChange={(e) => setEventEnd(e.target.value)}
+          required
+        />
         <button>Submit</button>
       </form>
     </div>

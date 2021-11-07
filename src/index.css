@@ -61,6 +61,8 @@ body {
 .main-body {
   margin-left: 300px;
   margin-right: 300px;
+  display: flex;
+  align-items: center;
 }
 
 .main {
@@ -97,4 +99,11 @@ textarea {
   width: max-content;
   max-width: 250px;
   overflow: hidden;
+}
+
+.header-body {
+  width:inherit;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
 }

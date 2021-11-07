@@ -4,14 +4,18 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./context/User";
+import { EasybaseProvider, useEasybase } from "easybase-react";
+import ebconfig from "./ebconfig";
 
 function Root() {
   return (
-    <UserProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </UserProvider>
+    <EasybaseProvider ebconfig={ebconfig}>
+      <UserProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </UserProvider>
+    </EasybaseProvider>
   );
 }
 
