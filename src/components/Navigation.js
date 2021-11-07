@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/User";
-import { useEasybase } from "easybase-react";
+import { EasybaseProvider, useEasybase } from "easybase-react";
 import Calendar from "react-calendar";
 import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
+  const { db, e } = useEasybase()
   const { user, setUser, setDay, setCurrMonth, setYear } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
@@ -14,7 +15,9 @@ const Navigation = ({ users }) => {
   const [eventStart, setEventStart] = useState("09:00");
   const [eventEnd, setEventEnd] = useState("09:30");
 
+
   useEffect(() => {
+
     let spec = users.find((ele) => ele.id === +user);
     setUsername(spec.name);
   }, [user]);
@@ -29,7 +32,7 @@ const Navigation = ({ users }) => {
     }
   };
 
-  const newEvent = (e) => {
+  const newEvent = async (e) => {
     e.preventDefault();
 
     let fullDate = eventDate.toString().split(" ")
@@ -44,13 +47,24 @@ const Navigation = ({ users }) => {
     const newEventObj = {
       month: m.id,
       day: eDay,
-      year: fullDate[3],
+      year: +fullDate[3],
       start: eventStart,
       end: eventEnd,
       user: +user,
       name: eventName,
       description: eventDesc,
     };
+
+    await db('EVENTS').insert({
+      month: m.id,
+      day: eDay,
+      year: +fullDate[3],
+      start: eventStart,
+      end: eventEnd,
+      user: +user,
+      name: eventName,
+      description: eventDesc,
+    }).one()
 
     data.events.push(newEventObj);
     setDay(eDay)
