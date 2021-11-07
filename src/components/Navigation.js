@@ -1,21 +1,13 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/User";
-import { EasybaseProvider, useEasybase } from "easybase-react";
+import { useEasybase } from "easybase-react";
 import Calendar from "react-calendar";
 import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
 
 const Navigation = ({ users }) => {
   const { db } = useEasybase();
-  const {
-    user,
-    setUser,
-    setDay,
-    setCurrMonth,
-    setYear,
-    eventsData,
-    setEventsData,
-  } = useUser();
+  const { user, setUser, setDay, setCurrMonth, setYear } = useUser();
   const [username, setUsername] = useState(users[0].name);
   const [eventName, setEventName] = useState("");
   const [eventDesc, setEventDesc] = useState("");
@@ -23,8 +15,7 @@ const Navigation = ({ users }) => {
   const [eventStart, setEventStart] = useState("09:00");
   const [eventEnd, setEventEnd] = useState("09:30");
   const [errors, setErrors] = useState();
-
-  useEffect(() => {}, [eventsData]);
+  const [eventsData, setEventsData] = useState();
 
   const eventsDb = async () => {
     const events = await db("APPTS").return().all();
@@ -94,13 +85,13 @@ const Navigation = ({ users }) => {
         description: eventDesc,
       })
       .one()
-      .then(() => eventsDb());
 
     setErrors();
 
     setDay(eDay);
     setCurrMonth(m.id);
-    setYear(fullDate[3]);
+    setYear(+fullDate[3]);
+    return eventsDb();
   };
 
   return (
