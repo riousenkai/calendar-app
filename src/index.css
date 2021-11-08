@@ -59,11 +59,11 @@ body {
 }
 
 .main-body {
-  margin-left: 300px;
-  margin-right: 300px;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   align-items: center;
+  max-width: 600px;
 }
 
 .main {
@@ -113,4 +113,8 @@ textarea {
   display: flex;
   flex-wrap: wrap;
   height: 100%;
+}
+
+.appt-card {
+  width: 200px;
 }

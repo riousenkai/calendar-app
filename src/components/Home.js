@@ -31,7 +31,19 @@ const Home = ({ data, eventsData, setEventsData }) => {
   }, [day, currMonth]);
 
   const remove = async (obj) => {
-    await db("APPTS").delete()({ obj }).one();
+    await db("APPTS")
+      .delete()
+      .where({
+        mon: obj.mon,
+        dy: obj.dy,
+        yr: obj.yr,
+        name: obj.name,
+        description: obj.description,
+        userid: obj.userid,
+        strt: obj.strt,
+        ending: obj.ending,
+      })
+      .one();
     setDay(obj.dy);
     setCurrMonth(obj.mon);
     setYear(obj.yr);

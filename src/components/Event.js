@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useEasybase } from "easybase-react";
 import isNotAvailable from "../helpers/isNotAvailable";
 import { useUser } from "../context/User";
@@ -6,7 +6,7 @@ import { useUser } from "../context/User";
 const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const { db } = useEasybase();
   const date = new Date();
-  const { user } = useUser();
+  const { user, target, setTarget, day, currMonth, year } = useUser();
   const [eventName, setEventName] = useState(event.name);
   const [eventDesc, setEventDesc] = useState(event.description);
   const [eventStart, setEventStart] = useState(event.strt);
@@ -15,6 +15,11 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const [visible, setVisible] = useState(false);
 
   const isPastEvent = new Date(event.yr, event.mon, event.dy + 1) < new Date();
+
+  useEffect(() => {
+    setTarget(false);
+    setVisible(false);
+  }, [day, currMonth, year]);
 
   const fix = async (obj, e) => {
     e.preventDefault();
@@ -78,11 +83,22 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
       .all();
 
     setEventsData(data);
+    setTarget(false);
+    setVisible(false);
+  };
+
+  const hide = () => {
+    setTarget(true);
+    setVisible(true);
+  };
+
+  const show = () => {
+    setTarget(false);
     setVisible(false);
   };
 
   return (
-    <>
+    <div className="appt-card">
       <p hidden={visible}>{event.name}</p>
       {errors?.length > 0 && (
         <>
@@ -126,14 +142,19 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
           required
         />
         <button>Submit</button>
+        <button onClick={() => show()}>Cancel</button>
       </form>
       {event.userid === +user && !isPastEvent && (
         <div hidden={visible}>
-          <button onClick={() => setVisible(true)}>Edit</button>
-          <button onClick={() => remove(event)}>Delete</button>
+          <button onClick={() => hide()} disabled={target}>
+            Edit
+          </button>
+          <button onClick={() => remove(event)} disabled={target}>
+            Delete
+          </button>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
