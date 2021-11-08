@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fileURLToPath } from "url";
 import { useUser } from "../context/User";
 
 const Calendar = ({ data, eventsData }) => {
@@ -11,8 +12,15 @@ const Calendar = ({ data, eventsData }) => {
 
   useEffect(() => {
     let dayAmt = [];
-    for (let i = 1; i <= +data.months[currMonth].days; i++) {
-      dayAmt.push(i);
+
+    if (currMonth === 1 && year % 4 === 0) {
+      for (let j = 1; j <= 29; j++) {
+        dayAmt.push(j);
+      }
+    } else {
+      for (let i = 1; i <= +data.months[currMonth].days; i++) {
+        dayAmt.push(i);
+      }
     }
     setTotalDays(dayAmt);
   }, [currMonth]);
@@ -55,10 +63,7 @@ const Calendar = ({ data, eventsData }) => {
 
   return (
     <div className="calendar-right">
-      <button
-        onClick={reverseMonth}
-        disabled={date.getFullYear() === year && date.getMonth() === currMonth}
-      >{`<`}</button>
+      <button onClick={reverseMonth}>{`<`}</button>
       <h1 className="month">
         {data.months[currMonth].month} {year}
       </h1>
