@@ -1,33 +1,13 @@
 import { createContext, useContext, useState } from "react";
-import { useEasybase } from "easybase-react";
-import { useEffect } from "react";
 
 export const UserContext = createContext();
 
 export const UserProvider = (props) => {
   let date = new Date();
   let days = [];
-  const { db } = useEasybase();
   const [user, setUser] = useState(0);
-  const [eventsData, setEventsData] = useState([]);
   const [currMonth, setCurrMonth] = useState(+date.getMonth());
   const [year, setYear] = useState(+date.getFullYear());
-
-  const eventsDb = async () => {
-    const events = await db("APPTS")
-      ?.return()
-      .orderBy({
-        by: "strt",
-        sort: "asc",
-      })
-      .all();
-
-    setEventsData(events);
-  };
-
-  useEffect(() => {
-    eventsDb();
-  }, []);
 
   const dayFinder = (d) => {
     let num = d.toString().split(" ")[2];
@@ -67,8 +47,6 @@ export const UserProvider = (props) => {
         setCurrMonth,
         year,
         setYear,
-        eventsData,
-        setEventsData,
       }}
     >
       {props.children}
