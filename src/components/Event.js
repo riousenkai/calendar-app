@@ -125,8 +125,8 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
   return (
     <div className="appt-card">
       <div className="appt-details" hidden={visible}>
-        <p>Appointment Name: {event.name}</p>
-        <div className="desc">Description: {event.description}</div>
+        <p className="event-name">{event.name}</p>
+        <div className="desc">Notes: {event.description}</div>
         <p>Organizer: {data.users[event.userid].name}</p>
         <p>Start Time: {event.strt}</p>
         <p>End Time: {event.ending}</p>

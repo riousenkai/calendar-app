@@ -63,24 +63,34 @@ const Calendar = ({ data, eventsData }) => {
   return (
     <div className="calendar-right">
       <div className="calendar-top">
-        <button onClick={reverseMonth} className="date-change-btn-back">{`<`}</button>
+        <button
+          onClick={reverseMonth}
+          className="date-change-btn-back"
+        >{`<`}</button>
         <h2 className="month">
           {data.months[currMonth].month} {year}
         </h2>
-        <button onClick={changeMonth} className="date-change-btn-forward">{`>`}</button>
+        <button
+          onClick={changeMonth}
+          className="date-change-btn-forward"
+        >{`>`}</button>
       </div>
-      <button onClick={returnToMonth}>Return to current date</button>
-      <select
-        id={0}
-        value={currDay}
-        onChange={(e) => jumpToDate(e)}
-        defaultValue="Jump to date..."
-      >
-        <option disabled={true}>Jump to date...</option>
-        {totalDays.map((day, i) => (
-          <option key={i}>{day}</option>
-        ))}
-      </select>
+      <button onClick={returnToMonth} className="date-return">
+        Return to current date
+      </button>
+      <div className="date-jump">
+        Jump to day:
+        <select
+          id={0}
+          value={currDay}
+          onChange={(e) => jumpToDate(e)}
+          className="date-select"
+        >
+          {totalDays.map((day, i) => (
+            <option key={i}>{day}</option>
+          ))}
+        </select>
+      </div>
       <div className="calendar-grid">
         {totalDays.map((day, i) => (
           <div
@@ -108,7 +118,7 @@ const Calendar = ({ data, eventsData }) => {
               (event) =>
                 event.dy === day && event.mon === currMonth && event.yr === year
             ) ? (
-              <div className="calendar-event-details">No events.</div>
+              <div className="calendar-event-details">No appointments</div>
             ) : null}
           </div>
         ))}

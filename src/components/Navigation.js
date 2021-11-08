@@ -16,6 +16,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
   const [eventStart, setEventStart] = useState("09:00");
   const [eventEnd, setEventEnd] = useState("09:30");
   const [errors, setErrors] = useState();
+  const [notVisible, setNotVisible] = useState(true);
 
   const eventsDb = async () => {
     const events = await db("APPTS")
@@ -42,6 +43,18 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     } else {
       return +num;
     }
+  };
+
+  const cancelSubmit = (e) => {
+    e.preventDefault();
+
+    setEventName("");
+    setEventDesc("");
+    setEventDate(new Date());
+    setEventStart("09:00");
+    setEventEnd("09:30");
+    setErrors();
+    setNotVisible(true);
   };
 
   const newEvent = async (e) => {
@@ -100,14 +113,92 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     setDay(eDay);
     setCurrMonth(m.id);
     setYear(+fullDate[3]);
+    setEventName("");
+    setEventDesc("");
+    setEventDate(new Date());
+    setEventStart("09:00");
+    setEventEnd("09:30");
+
+    setNotVisible(true);
   };
 
   return (
     <div className="nav-main">
       <div className="greeting">Hello, {username}!</div>
+
+      <div className="add-event">
+        <div className="add-event-text">Add Event</div>{" "}
+        <img
+          onClick={() => setNotVisible(!notVisible)}
+          className="add-img"
+          src="https://img.icons8.com/flat-round/64/000000/plus.png"
+        />
+      </div>
+      {errors &&
+        errors.map((error) => (
+          <div className="create-errors" key={error}>
+            {error}
+          </div>
+        ))}
+      <div className="event-form-main">
+        <form
+          className="add-event-form"
+          onSubmit={(e) => newEvent(e)}
+          hidden={notVisible}
+        >
+          <p className="event-form-label">Title</p>
+          <input
+            value={eventName}
+            onChange={(e) => setEventName(e.target.value)}
+            required
+          />
+          <p className="event-form-label">Notes</p>
+          <textarea
+            value={eventDesc}
+            onChange={(e) => setEventDesc(e.target.value)}
+          />
+          <Calendar
+            className="calendar"
+            defaultValue={new Date()}
+            value={eventDate}
+            minDate={new Date()}
+            onChange={(e) => setEventDate(e)}
+          />
+          <p className="event-form-label">Start Date</p>
+          <input
+            className="event-time"
+            value={eventStart}
+            type="time"
+            min="09:00"
+            max="16:59"
+            onChange={(e) => setEventStart(e.target.value)}
+            required
+          />
+          <p className="event-form-label">End Date</p>
+          <input
+            className="event-time"
+            value={eventEnd}
+            type="time"
+            min="09:01"
+            max="17:00"
+            onChange={(e) => setEventEnd(e.target.value)}
+            required
+          />
+          <div className="event-submit-btns">
+            <button className="event-submit">Submit</button>
+            <button className="event-cancel" onClick={(e) => cancelSubmit(e)}>
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
       <div className="change-user">
-        Change User:
-        <select onChange={(e) => setUser(e.target.value)} value={user}>
+        Change User:{" "}
+        <select
+          className="user-fix"
+          onChange={(e) => setUser(e.target.value)}
+          value={user}
+        >
           {users.map((user) => (
             <option key={user.id} value={user.id}>
               {user.name}
@@ -115,52 +206,6 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
           ))}
         </select>
       </div>
-      <div className="add-event">
-        <div className="add-event-text">Add Event</div>{" "}
-        <img
-          className="add-img"
-          src="https://img.icons8.com/flat-round/64/000000/plus.png"
-        />
-      </div>
-      {errors && errors.map((error) => <div key={error}>{error}</div>)}
-      <form className="add-event-form" onSubmit={(e) => newEvent(e)}>
-        Event Name:
-        <input
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-          required
-        />
-        Description:
-        <textarea
-          value={eventDesc}
-          onChange={(e) => setEventDesc(e.target.value)}
-        />
-        <Calendar
-          defaultValue={new Date()}
-          value={eventDate}
-          minDate={new Date()}
-          onChange={(e) => setEventDate(e)}
-        />
-        Start Date:
-        <input
-          value={eventStart}
-          type="time"
-          min="09:00"
-          max="16:59"
-          onChange={(e) => setEventStart(e.target.value)}
-          required
-        />
-        End Date:
-        <input
-          value={eventEnd}
-          type="time"
-          min="09:01"
-          max="17:00"
-          onChange={(e) => setEventEnd(e.target.value)}
-          required
-        />
-        <button>Submit</button>
-      </form>
     </div>
   );
 };
