@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useUser } from "../context/User";
 import { useEasybase } from "easybase-react";
+import Event from "./Event";
 
 const Home = ({ data, eventsData, setEventsData }) => {
-  console.log(eventsData);
   const { db } = useEasybase();
   const [dateName, setDateName] = useState("");
   const { day, user, currMonth, year, setDay, setCurrMonth, setYear } =
@@ -14,8 +14,10 @@ const Home = ({ data, eventsData, setEventsData }) => {
       ?.return()
       .where({
         mon: currMonth,
-        dy: day,
-        yr: year,
+      })
+      .orderBy({
+        by: "strt",
+        sort: "asc",
       })
       .all();
 
@@ -29,7 +31,7 @@ const Home = ({ data, eventsData, setEventsData }) => {
   }, [day, currMonth]);
 
   const remove = async (obj) => {
-    await db("APPTS").delete().where({ obj }).one();
+    await db("APPTS").delete()({ obj }).one();
     setDay(obj.dy);
     setCurrMonth(obj.mon);
     setYear(obj.yr);
@@ -41,18 +43,21 @@ const Home = ({ data, eventsData, setEventsData }) => {
       <p className="header-body">
         Appointments for {dateName} {day}, {year}
       </p>
-      {eventsData?.map((event) => (
-        <div>
-          <p>{event.name}</p>
-          {console.log(user, event)}
-          {+event.userid === +user && (
-            <>
-              <button>Edit</button>
-              <button onClick={() => remove(event)}>Delete</button>
-            </>
-          )}
-        </div>
-      ))}
+      {eventsData?.map((event, i) => {
+        return (
+          +event.userid === +user &&
+          event.dy === day && (
+            <Event
+              i={i}
+              key={i}
+              remove={remove}
+              event={event}
+              eventsData={eventsData}
+              setEventsData={setEventsData}
+            />
+          )
+        );
+      })}
     </div>
   );
 };

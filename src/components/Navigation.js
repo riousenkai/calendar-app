@@ -4,6 +4,7 @@ import { useEasybase } from "easybase-react";
 import Calendar from "react-calendar";
 import data from "../data/information";
 import "react-calendar/dist/Calendar.css";
+import isNotAvailable from "../helpers/isNotAvailable";
 
 const Navigation = ({ users, setEventsData, eventsData }) => {
   const { db } = useEasybase();
@@ -17,14 +18,16 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
   const [errors, setErrors] = useState();
 
   const eventsDb = async () => {
-    const events = await db("APPTS")?.return().all();
+    const events = await db("APPTS")
+      ?.return()
+      .orderBy({
+        by: "strt",
+        sort: "asc",
+      })
+      .all();
 
     setEventsData(events);
   };
-
-  // useEffect(() => {
-  //   eventsDb();
-  // }, [])
 
   useEffect(() => {
     let spec = users.find((ele) => ele.id === +user);
@@ -51,14 +54,14 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
 
     const errs = [];
 
-    const duplicate = eventsData.find(
-      (event) =>
-        event.day === eDay &&
-        event.month === m.id &&
-        event.year === Number(fullDate[3]) &&
-        parseInt(event.start) >= parseInt(eventStart) &&
-        parseInt(event.ending) <= parseInt(eventStart)
-    );
+    const duplicate = eventsData.find((event) => {
+      let isSameDate =
+        event.dy === eDay &&
+        event.mon === m.id &&
+        event.yr === Number(fullDate[3]);
+
+      return isSameDate && isNotAvailable(event, eventStart, eventEnd);
+    });
 
     if (eventStart === eventEnd) {
       errs.push("End time cannot be at the same time as start time!");
@@ -85,7 +88,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
         description: eventDesc,
         userId: user,
       })
-      .one()
+      .one();
 
     setErrors();
 
@@ -115,7 +118,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
           src="https://img.icons8.com/flat-round/64/000000/plus.png"
         />
       </div>
-      {errors && errors.map((error) => <div>{error}</div>)}
+      {errors && errors.map((error) => <div key={error}>{error}</div>)}
       <form className="add-event-form" onSubmit={(e) => newEvent(e)}>
         Event Name:
         <input
@@ -139,7 +142,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
           value={eventStart}
           type="time"
           min="09:00"
-          max="16:30"
+          max="16:59"
           onChange={(e) => setEventStart(e.target.value)}
           required
         />
@@ -147,7 +150,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
         <input
           value={eventEnd}
           type="time"
-          min="09:30"
+          min="09:01"
           max="17:00"
           onChange={(e) => setEventEnd(e.target.value)}
           required

@@ -14,7 +14,10 @@ export const UserProvider = (props) => {
   const [year, setYear] = useState(+date.getFullYear());
 
   const eventsDb = async () => {
-    const events = await db("APPTS")?.return().all();
+    const events = await db("APPTS")?.return().orderBy({
+      by: "strt",
+      sort: "asc",
+    }).all();
 
     setEventsData(events);
   };

@@ -10,7 +10,10 @@ function App() {
   const [eventsData, setEventsData] = useState([])
 
   const getData = async () => {
-    const events = await db("APPTS")?.return().all();
+    const events = await db("APPTS")?.return().orderBy({
+      by: "strt",
+      sort: "asc",
+    }).all();
 
     setEventsData(events)
   }

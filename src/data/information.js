@@ -13,28 +13,6 @@ let data = {
       name: "Leslie Knope",
     },
   ],
-  events: [
-    {
-      month: 10,
-      day: 5,
-      year: 2021,
-      start: "09:00",
-      ending: "09:30",
-      userId: 0,
-      name: "Test",
-      description: "Appointment with Michael",
-    },
-    {
-      month: 10,
-      day: 5,
-      year: 2021,
-      start: "10:00",
-      ending: "10:30",
-      userId: 1,
-      name: "Test2",
-      description: "Appointment with Jan",
-    },
-  ],
   months: [
     {
       month: "January",
