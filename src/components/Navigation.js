@@ -31,6 +31,12 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
 
   useEffect(() => {
     let spec = users.find((ele) => ele.id === +user);
+    document.querySelectorAll(".editButtons").forEach((edit) => {
+      edit.classList.add("hidden");
+    });
+    document.querySelectorAll(`.edit-${user}`).forEach((edit) => {
+      edit.classList.remove("hidden");
+    });
     setUsername(spec.name);
   }, [user]);
 

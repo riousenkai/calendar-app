@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useEasybase } from "easybase-react";
 import isNotAvailable from "../helpers/isNotAvailable";
 import { useUser } from "../context/User";
+import data from "../data/information";
 
 const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const { db } = useEasybase();
@@ -16,7 +17,9 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const isPastEvent = new Date(event.yr, event.mon, event.dy + 1) < new Date();
 
   useEffect(() => {
-    setTarget(false);
+    document.querySelectorAll(".editButtons").forEach((edit) => {
+      edit.classList.remove("hidden");
+    });
     setVisible(false);
     setErrors([]);
   }, [day, currMonth, year]);
@@ -91,6 +94,9 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
     setTarget(true);
     setVisible(true);
     setErrors();
+    document.querySelectorAll(".editButtons").forEach((edit) => {
+      edit.classList.add("hidden");
+    });
   };
 
   const show = (e) => {
@@ -98,11 +104,20 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
     setTarget(false);
     setVisible(false);
     setErrors();
+    document.querySelectorAll(".editButtons").forEach((edit) => {
+      edit.classList.remove("hidden");
+    });
   };
 
   return (
     <div className="appt-card">
-      <p hidden={visible}>{event.name}</p>
+      <div className="appt-details" hidden={visible}>
+        <p>Appointment Name: {event.name}</p>
+        <div className="desc">Description: {event.description}</div>
+        <p>Organizer: {data.users[event.userid].name}</p>
+        <p>Start Time: {event.strt}</p>
+        <p>End Time: {event.ending}</p>
+      </div>
       {errors?.length > 0 && (
         <div hidden={errors.length < 1}>
           <div>
@@ -115,44 +130,58 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
           </ul>
         </div>
       )}
-      <form onSubmit={(e) => fix(event, e)} hidden={!visible}>
-        Event Name:
-        <input
-          value={eventName}
-          onChange={(e) => setEventName(e.target.value)}
-        />
-        Event Description:
-        <textarea
-          value={eventDesc}
-          onChange={(e) => setEventDesc(e.target.value)}
-        />
-        Start Date:
-        <input
-          value={eventStart}
-          type="time"
-          min="09:00"
-          max="16:59"
-          onChange={(e) => setEventStart(e.target.value)}
-          required
-        />
-        End Date:
-        <input
-          value={eventEnd}
-          type="time"
-          min="09:01"
-          max="17:00"
-          onChange={(e) => setEventEnd(e.target.value)}
-          required
-        />
-        <button>Submit</button>
-        <button onClick={(e) => show(e)}>Cancel</button>
-      </form>
+      <div className="edit-form-all">
+        <form
+          onSubmit={(e) => fix(event, e)}
+          hidden={!visible}
+          className="edit-form"
+        >
+          Appointment Name:
+          <input
+            value={eventName}
+            onChange={(e) => setEventName(e.target.value)}
+            className="edit-input"
+          />
+          Appointment Description:
+          <textarea
+            value={eventDesc}
+            onChange={(e) => setEventDesc(e.target.value)}
+            className="edit-input-2"
+          />
+          <p>
+            Start Date:
+            <input
+              value={eventStart}
+              type="time"
+              min="09:00"
+              max="16:59"
+              onChange={(e) => setEventStart(e.target.value)}
+              required
+            />
+          </p>
+          <p>
+            End Date:
+            <input
+              value={eventEnd}
+              type="time"
+              min="09:01"
+              max="17:00"
+              onChange={(e) => setEventEnd(e.target.value)}
+              required
+            />
+          </p>
+          <div className="edit-submit">
+            <button className="editBtn">Submit</button>
+            <button onClick={(e) => show(e)} className="delBtn">Cancel</button>
+          </div>
+        </form>
+      </div>
       {event.userid === +user && !isPastEvent && (
-        <div hidden={visible}>
-          <button onClick={() => hide()} disabled={target}>
+        <div hidden={visible} className={`editButtons edit-${event.userid}`}>
+          <button onClick={() => hide()} className="editBtn">
             Edit
           </button>
-          <button onClick={() => remove(event)} disabled={target}>
+          <button onClick={() => remove(event)} className="delBtn">
             Delete
           </button>
         </div>
