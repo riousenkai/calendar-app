@@ -17,6 +17,10 @@ const Calendar = ({ data, eventsData }) => {
     setTotalDays(dayAmt);
   }, [currMonth]);
 
+  useEffect(() => {
+    setCurrDay(+day);
+  }, [day]);
+
   const changeMonth = () => {
     if (currMonth === 11) {
       setCurrMonth(0);
