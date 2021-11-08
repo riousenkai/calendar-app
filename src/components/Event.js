@@ -4,7 +4,7 @@ import isNotAvailable from "../helpers/isNotAvailable";
 import { useUser } from "../context/User";
 import data from "../data/information";
 
-const Event = ({ remove, event, eventsData, setEventsData}) => {
+const Event = ({ remove, event, eventsData, setEventsData }) => {
   const { db } = useEasybase();
   const { user, day, currMonth, year } = useUser();
   const [eventName, setEventName] = useState(event.name);
@@ -21,7 +21,11 @@ const Event = ({ remove, event, eventsData, setEventsData}) => {
     });
     setVisible(false);
     setErrors([]);
-  }, [day, currMonth, year]);
+  }, [day, currMonth, year, eventsData]);
+
+  useEffect(() => {
+    setVisible(false);
+  }, [user]);
 
   const fix = async (obj, e) => {
     e.preventDefault();
