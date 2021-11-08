@@ -4,7 +4,7 @@ import "./index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import { UserProvider } from "./context/User";
-import { EasybaseProvider, useEasybase } from "easybase-react";
+import { EasybaseProvider } from "easybase-react";
 import ebconfig from "./ebconfig";
 
 function Root() {
