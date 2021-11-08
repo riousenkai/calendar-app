@@ -31,18 +31,6 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
 
   useEffect(() => {
     let spec = users.find((ele) => ele.id === +user);
-    document.querySelectorAll(".editButtons").forEach((edit) => {
-      edit.classList.add("hidden");
-    });
-    document.querySelectorAll(".edit-form").forEach((edit) => {
-      edit.classList.add("hidden");
-    });
-    document.querySelectorAll(".edit-form").forEach((edit) => {
-      edit.classList.remove("hidden");
-    });
-    document.querySelectorAll(`.edit-${user}`).forEach((edit) => {
-      edit.classList.remove("hidden");
-    });
     setUsername(spec.name);
   }, [user]);
 
@@ -85,6 +73,10 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
       errs.push("There is already an event scheduled for that timeframe.");
     }
 
+    if (eventName.length > 50) {
+      errs.push("Appointment name is too long!");
+    }
+
     if (errs.length > 0) {
       return setErrors(errs);
     }
@@ -96,8 +88,8 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
         yr: +fullDate[3],
         strt: eventStart,
         ending: eventEnd,
-        name: eventName,
-        description: eventDesc,
+        name: eventName.replace(/'/g, ""),
+        description: eventDesc.replace(/'/g, ""),
         userId: user,
       })
       .one();

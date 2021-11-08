@@ -4,7 +4,7 @@ import isNotAvailable from "../helpers/isNotAvailable";
 import { useUser } from "../context/User";
 import data from "../data/information";
 
-const Event = ({ remove, event, eventsData, setEventsData, i }) => {
+const Event = ({ remove, event, eventsData, setEventsData}) => {
   const { db } = useEasybase();
   const { user, day, currMonth, year } = useUser();
   const [eventName, setEventName] = useState(event.name);
@@ -12,8 +12,8 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const [eventStart, setEventStart] = useState(event.strt);
   const [eventEnd, setEventEnd] = useState(event.ending);
   const [errors, setErrors] = useState([]);
-  const [visible, setVisible] = useState(false);
   const isPastEvent = new Date(event.yr, event.mon, event.dy + 1) < new Date();
+  const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     document.querySelectorAll(".editButtons").forEach((edit) => {
@@ -63,8 +63,8 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
         yr: obj.yr,
         strt: obj.strt,
         ending: obj.ending,
-        name: obj.name,
-        description: obj.description,
+        name: obj.name.replace(/'/g, ""),
+        description: obj.description.replace(/'/g, ""),
       })
       .set({
         name: eventName,

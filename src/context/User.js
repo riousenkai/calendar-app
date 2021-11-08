@@ -12,7 +12,6 @@ export const UserProvider = (props) => {
   const [eventsData, setEventsData] = useState([]);
   const [currMonth, setCurrMonth] = useState(+date.getMonth());
   const [year, setYear] = useState(+date.getFullYear());
-  const [target, setTarget] = useState(false);
 
   const eventsDb = async () => {
     const events = await db("APPTS")
@@ -75,8 +74,6 @@ export const UserProvider = (props) => {
         setYear,
         eventsData,
         setEventsData,
-        target,
-        setTarget,
       }}
     >
       {props.children}

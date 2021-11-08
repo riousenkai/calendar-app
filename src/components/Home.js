@@ -6,7 +6,7 @@ import Event from "./Event";
 const Home = ({ data, eventsData, setEventsData }) => {
   const { db } = useEasybase();
   const [dateName, setDateName] = useState("");
-  const { day, user, currMonth, year, setDay, setCurrMonth, setYear } =
+  const { day, currMonth, year, setDay, setCurrMonth, setYear } =
     useUser();
 
   const finder = async () => {
