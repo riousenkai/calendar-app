@@ -1,17 +1,17 @@
 import { useState } from "react";
 import { useEasybase } from "easybase-react";
 import isNotAvailable from "../helpers/isNotAvailable";
+import { useUser } from "../context/User";
 
 const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const { db } = useEasybase();
+  const { user } = useUser();
   const [eventName, setEventName] = useState(event.name);
   const [eventDesc, setEventDesc] = useState(event.description);
   const [eventStart, setEventStart] = useState(event.strt);
   const [eventEnd, setEventEnd] = useState(event.ending);
   const [errors, setErrors] = useState([]);
   const [visible, setVisible] = useState(false);
-
-  console.log(event.name)
 
   const fix = async (obj, e) => {
     e.preventDefault();
@@ -20,7 +20,11 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
     const duplicate = eventsData.find((event) => {
       let isSameDate =
         event.dy === obj.dy && event.mon === obj.mon && event.yr === obj.yr;
-      return isSameDate && isNotAvailable(event, eventStart, eventEnd) && eventsData.indexOf(obj) !== eventsData.indexOf(event);
+      return (
+        isSameDate &&
+        isNotAvailable(event, eventStart, eventEnd) &&
+        eventsData.indexOf(obj) !== eventsData.indexOf(event)
+      );
     });
 
     if (eventStart === eventEnd) {
@@ -79,9 +83,13 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
       <p hidden={visible}>{event.name}</p>
       {errors?.length > 0 && (
         <>
-          <div>The following error{errors.length > 1? 's' : null} occured:</div>
+          <div>
+            The following error{errors.length > 1 ? "s" : null} occured:
+          </div>
           <ul>
-            {errors?.map((err) => <li>{err}</li>)}
+            {errors?.map((err) => (
+              <li>{err}</li>
+            ))}
           </ul>
         </>
       )}
@@ -116,10 +124,12 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
         />
         <button>Submit</button>
       </form>
-      <div hidden={visible}>
-        <button onClick={() => setVisible(true)}>Edit</button>
-        <button onClick={() => remove(event)}>Delete</button>
-      </div>
+      {event.userid === +user && (
+        <div hidden={visible}>
+          <button onClick={() => setVisible(true)}>Edit</button>
+          <button onClick={() => remove(event)}>Delete</button>
+        </div>
+      )}
     </>
   );
 };

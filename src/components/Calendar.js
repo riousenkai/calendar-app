@@ -4,9 +4,10 @@ import { useUser } from "../context/User";
 const Calendar = ({ data, eventsData }) => {
   const date = new Date();
 
-  const { setDay, currMonth, setCurrMonth, year, setYear } = useUser();
+  const { setDay, currMonth, setCurrMonth, year, setYear, day } = useUser();
 
   const [totalDays, setTotalDays] = useState([]);
+  const [currDay, setCurrDay] = useState(day);
 
   useEffect(() => {
     let dayAmt = [];
@@ -40,6 +41,14 @@ const Calendar = ({ data, eventsData }) => {
     setDay(date.getDate());
   };
 
+  const jumpToDate = (e) => {
+    setCurrDay(e.target.value);
+    document
+      .getElementById(e.target.value)
+      .scrollIntoView({ behavior: "smooth" });
+    setDay(+e.target.value);
+  };
+
   return (
     <div className="calendar-right">
       <button
@@ -53,11 +62,8 @@ const Calendar = ({ data, eventsData }) => {
       <button onClick={returnToMonth}>Return to current date</button>
       <select
         id={0}
-        onChange={(e) =>
-          document
-            .getElementById(e.target.value)
-            .scrollIntoView({ behavior: "smooth" })
-        }
+        value={currDay}
+        onChange={(e) => jumpToDate(e)}
         defaultValue="Jump to date..."
       >
         <option disabled={true}>Jump to date...</option>

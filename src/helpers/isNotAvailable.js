@@ -9,9 +9,6 @@ export default function isNotAvailable(event, eventStart, eventEnd) {
     existingStart > newStart && existingEnd >= newEnd && newEnd >= existingStart;
   let startEarlyEndAfterStartEnd =
     existingStart > newStart && existingEnd <= newEnd && newEnd >= existingStart;
-  console.log(startBetweenStartEnd);
-  console.log(startEarlyEndBetweenStartEnd);
-  console.log(startEarlyEndAfterStartEnd);
   return (
     startBetweenStartEnd ||
     startEarlyEndBetweenStartEnd ||

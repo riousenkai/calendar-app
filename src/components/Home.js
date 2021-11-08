@@ -43,21 +43,24 @@ const Home = ({ data, eventsData, setEventsData }) => {
       <p className="header-body">
         Appointments for {dateName} {day}, {year}
       </p>
-      {eventsData?.map((event, i) => {
-        return (
-          +event.userid === +user &&
-          event.dy === day && (
-            <Event
-              i={i}
-              key={i}
-              remove={remove}
-              event={event}
-              eventsData={eventsData}
-              setEventsData={setEventsData}
-            />
-          )
-        );
-      })}
+      <div className="appts-container">
+        {eventsData?.map((event, i) => {
+          return (
+            event.mon === currMonth &&
+            event.yr === year &&
+            event.dy === day && (
+              <Event
+                i={i}
+                key={i}
+                remove={remove}
+                event={event}
+                eventsData={eventsData}
+                setEventsData={setEventsData}
+              />
+            )
+          );
+        })}
+      </div>
     </div>
   );
 };

@@ -10,5 +10,3 @@ const dayFinder = (d) => {
         return +num
     }
 };
-
-console.log(dayFinder(date))
