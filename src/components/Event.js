@@ -13,12 +13,12 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const [eventEnd, setEventEnd] = useState(event.ending);
   const [errors, setErrors] = useState([]);
   const [visible, setVisible] = useState(false);
-
   const isPastEvent = new Date(event.yr, event.mon, event.dy + 1) < new Date();
 
   useEffect(() => {
     setTarget(false);
     setVisible(false);
+    setErrors([]);
   }, [day, currMonth, year]);
 
   const fix = async (obj, e) => {
@@ -90,27 +90,30 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const hide = () => {
     setTarget(true);
     setVisible(true);
+    setErrors();
   };
 
-  const show = () => {
+  const show = (e) => {
+    e.preventDefault();
     setTarget(false);
     setVisible(false);
+    setErrors();
   };
 
   return (
     <div className="appt-card">
       <p hidden={visible}>{event.name}</p>
       {errors?.length > 0 && (
-        <>
+        <div hidden={errors.length < 1}>
           <div>
             The following error{errors.length > 1 ? "s" : null} occured:
           </div>
           <ul>
-            {errors?.map((err) => (
+            {errors.map((err) => (
               <li>{err}</li>
             ))}
           </ul>
-        </>
+        </div>
       )}
       <form onSubmit={(e) => fix(event, e)} hidden={!visible}>
         Event Name:
@@ -142,7 +145,7 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
           required
         />
         <button>Submit</button>
-        <button onClick={() => show()}>Cancel</button>
+        <button onClick={(e) => show(e)}>Cancel</button>
       </form>
       {event.userid === +user && !isPastEvent && (
         <div hidden={visible}>
