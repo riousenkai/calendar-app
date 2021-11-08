@@ -31,6 +31,10 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
   };
 
   useEffect(() => {
+    setErrors();
+  }, [notVisible]);
+
+  useEffect(() => {
     let spec = users.find((ele) => ele.id === +user);
     setUsername(spec.name);
   }, [user]);
@@ -53,7 +57,6 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     setEventDate(new Date());
     setEventStart("09:00");
     setEventEnd("09:30");
-    setErrors();
     setNotVisible(true);
   };
 
@@ -105,11 +108,11 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
         description: eventDesc.replace(/'/g, ""),
         userId: user,
       })
-      .one();
+      .one()
+      .then(() => eventsDb());
 
     setErrors();
 
-    eventsDb();
     setDay(eDay);
     setCurrMonth(m.id);
     setYear(+fullDate[3]);
@@ -118,8 +121,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     setEventDate(new Date());
     setEventStart("09:00");
     setEventEnd("09:30");
-
-    setNotVisible(true);
+    setNotVisible(true)
   };
 
   return (

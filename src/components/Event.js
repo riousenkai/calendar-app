@@ -47,7 +47,7 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
       errs.push("Start time cannot be later than end time!");
     }
 
-    if (event.name.length > 50) {
+    if (eventName.length > 50) {
       errs.push("Appointment name is too long!");
     }
 
@@ -146,20 +146,20 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
           hidden={!visible}
           className="edit-form"
         >
-          Appointment Name:
+          Title:
           <input
             value={eventName}
             onChange={(e) => setEventName(e.target.value)}
             className="edit-input"
           />
-          Appointment Description:
+          Notes:
           <textarea
             value={eventDesc}
             onChange={(e) => setEventDesc(e.target.value)}
             className="edit-input-2"
           />
           <p className="edit-time">
-            Start Date:
+            Start Date:{" "}
             <input
               value={eventStart}
               type="time"
@@ -170,7 +170,7 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
             />
           </p>
           <p className="edit-time">
-            End Date:
+            End Date:{" "}
             <input
               value={eventEnd}
               type="time"

@@ -6,15 +6,11 @@ import Event from "./Event";
 const Home = ({ data, eventsData, setEventsData }) => {
   const { db } = useEasybase();
   const [dateName, setDateName] = useState("");
-  const { day, currMonth, year, setDay, setCurrMonth, setYear } =
-    useUser();
+  const { day, currMonth, year, setDay, setCurrMonth, setYear } = useUser();
 
   const finder = async () => {
     const eventList = await db("APPTS")
       ?.return()
-      .where({
-        mon: currMonth,
-      })
       .orderBy({
         by: "strt",
         sort: "asc",

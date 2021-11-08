@@ -45,10 +45,6 @@ export const UserProvider = (props) => {
     return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   };
 
-  const month = new Intl.DateTimeFormat("en-US", { month: "long" }).format(
-    date
-  );
-
   const daysAmt = getDays(new Date(date.getFullYear(), date.getMonth()));
 
   for (let i = 1; i <= daysAmt; i++) {
@@ -62,7 +58,6 @@ export const UserProvider = (props) => {
       value={{
         user,
         setUser,
-        month,
         days,
         date,
         day,
