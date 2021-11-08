@@ -14,6 +14,7 @@ body {
   height: 100%;
   margin-left: auto;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 0;
   position: fixed;
   top: 0;
@@ -22,7 +23,8 @@ body {
 
 .month {
   text-align: center;
-  font-size: 36px;
+  font-size: 28px;
+  cursor: default;
 }
 
 .calendar-grid {
@@ -244,4 +246,41 @@ li {
 
 .edit-time {
   margin: 5px 0;
+}
+
+.calendar-top {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.date-change-btn-back {
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  margin-right: 255px;
+  background-color: #32fca7;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
+.date-change-btn-forward {
+  height: 30px;
+  width: 30px;
+  text-align: center;
+  cursor: pointer;
+  position: absolute;
+  margin-left: 255px;
+  background-color: #32fca7;
+  border: 1px solid black;
+  border-radius: 6px;
+}
+
+.date-change-btn-forward:active,
+.date-change-btn-back:active {
+  transform: translateY(2px);
 }

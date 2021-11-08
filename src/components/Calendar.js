@@ -62,11 +62,13 @@ const Calendar = ({ data, eventsData }) => {
 
   return (
     <div className="calendar-right">
-      <button onClick={reverseMonth}>{`<`}</button>
-      <h1 className="month">
-        {data.months[currMonth].month} {year}
-      </h1>
-      <button onClick={changeMonth}>{`>`}</button>
+      <div className="calendar-top">
+        <button onClick={reverseMonth} className="date-change-btn-back">{`<`}</button>
+        <h2 className="month">
+          {data.months[currMonth].month} {year}
+        </h2>
+        <button onClick={changeMonth} className="date-change-btn-forward">{`>`}</button>
+      </div>
       <button onClick={returnToMonth}>Return to current date</button>
       <select
         id={0}
@@ -94,7 +96,10 @@ const Calendar = ({ data, eventsData }) => {
                 event.mon === currMonth &&
                 event.yr === year ? (
                   <div className="calendar-event-details">
-                    {event.name?.length < 15 ? event?.name : `${event.name?.slice(0, 13)}...`} from {event.strt} to {event.ending}
+                    {event.name?.length < 15
+                      ? event?.name
+                      : `${event.name?.slice(0, 13)}...`}{" "}
+                    from {event.strt} to {event.ending}
                   </div>
                 ) : null}
               </div>
