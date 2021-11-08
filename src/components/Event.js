@@ -86,10 +86,6 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
         by: "strt",
         sort: "asc",
       })
-      .orderBy({
-        by: "strt",
-        sort: "asc",
-      })
       .all();
 
     setEventsData(data);
