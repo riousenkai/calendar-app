@@ -96,6 +96,10 @@ const Event = ({ remove, event, eventsData, setEventsData }) => {
   };
 
   const hide = () => {
+    setEventName(event.name);
+    setEventDesc(event.description);
+    setEventStart(event.strt);
+    setEventEnd(event.ending);
     setVisible(true);
     setErrors();
     document.querySelectorAll(".editButtons").forEach((edit) => {
