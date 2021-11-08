@@ -1,6 +1,6 @@
-# Getting Started on Calendar App
+# Calendar App
 
-## Best if viewed in 1920 x 1080 screen resolution with Google Chrome
+(Best if viewed in 1920 x 1080 screen resolution with Google Chrome)
 
 ## Technologies / Frameworks used:
 * JavaScript / React
