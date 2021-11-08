@@ -5,6 +5,7 @@ import { useUser } from "../context/User";
 
 const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const { db } = useEasybase();
+  const date = new Date();
   const { user } = useUser();
   const [eventName, setEventName] = useState(event.name);
   const [eventDesc, setEventDesc] = useState(event.description);
@@ -12,6 +13,8 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const [eventEnd, setEventEnd] = useState(event.ending);
   const [errors, setErrors] = useState([]);
   const [visible, setVisible] = useState(false);
+
+  const isPastEvent = new Date(event.yr, event.mon, event.dy + 1) < new Date();
 
   const fix = async (obj, e) => {
     e.preventDefault();
@@ -124,7 +127,7 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
         />
         <button>Submit</button>
       </form>
-      {event.userid === +user && (
+      {event.userid === +user && !isPastEvent && (
         <div hidden={visible}>
           <button onClick={() => setVisible(true)}>Edit</button>
           <button onClick={() => remove(event)}>Delete</button>
