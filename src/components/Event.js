@@ -6,8 +6,7 @@ import data from "../data/information";
 
 const Event = ({ remove, event, eventsData, setEventsData, i }) => {
   const { db } = useEasybase();
-  const date = new Date();
-  const { user, target, setTarget, day, currMonth, year } = useUser();
+  const { user, day, currMonth, year } = useUser();
   const [eventName, setEventName] = useState(event.name);
   const [eventDesc, setEventDesc] = useState(event.description);
   const [eventStart, setEventStart] = useState(event.strt);
@@ -42,6 +41,10 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
       errs.push("End time cannot be at the same time as start time!");
     } else if (eventStart > eventEnd) {
       errs.push("Start time cannot be later than end time!");
+    }
+
+    if (event.name.length > 50) {
+      errs.push("Appointment name is too long!");
     }
 
     if (duplicate) {
@@ -86,12 +89,13 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
       .all();
 
     setEventsData(data);
-    setTarget(false);
     setVisible(false);
+    document.querySelectorAll(".editButtons").forEach((edit) => {
+      edit.classList.remove("hidden");
+    });
   };
 
   const hide = () => {
-    setTarget(true);
     setVisible(true);
     setErrors();
     document.querySelectorAll(".editButtons").forEach((edit) => {
@@ -101,7 +105,12 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
 
   const show = (e) => {
     e.preventDefault();
-    setTarget(false);
+
+    setEventName(event.name);
+    setEventDesc(event.description);
+    setEventStart(event.strt);
+    setEventEnd(event.ending);
+
     setVisible(false);
     setErrors();
     document.querySelectorAll(".editButtons").forEach((edit) => {
@@ -119,10 +128,7 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
         <p>End Time: {event.ending}</p>
       </div>
       {errors?.length > 0 && (
-        <div hidden={errors.length < 1}>
-          <div>
-            The following error{errors.length > 1 ? "s" : null} occured:
-          </div>
+        <div hidden={errors.length < 1} className="errors">
           <ul>
             {errors.map((err) => (
               <li>{err}</li>
@@ -148,7 +154,7 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
             onChange={(e) => setEventDesc(e.target.value)}
             className="edit-input-2"
           />
-          <p>
+          <p className="edit-time">
             Start Date:
             <input
               value={eventStart}
@@ -159,7 +165,7 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
               required
             />
           </p>
-          <p>
+          <p className="edit-time">
             End Date:
             <input
               value={eventEnd}
@@ -172,7 +178,9 @@ const Event = ({ remove, event, eventsData, setEventsData, i }) => {
           </p>
           <div className="edit-submit">
             <button className="editBtn">Submit</button>
-            <button onClick={(e) => show(e)} className="delBtn">Cancel</button>
+            <button onClick={(e) => show(e)} className="delBtn">
+              Cancel
+            </button>
           </div>
         </form>
       </div>

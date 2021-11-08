@@ -34,6 +34,12 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     document.querySelectorAll(".editButtons").forEach((edit) => {
       edit.classList.add("hidden");
     });
+    document.querySelectorAll(".edit-form").forEach((edit) => {
+      edit.classList.add("hidden");
+    });
+    document.querySelectorAll(".edit-form").forEach((edit) => {
+      edit.classList.remove("hidden");
+    });
     document.querySelectorAll(`.edit-${user}`).forEach((edit) => {
       edit.classList.remove("hidden");
     });

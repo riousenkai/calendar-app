@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import { fileURLToPath } from "url";
 import { useUser } from "../context/User";
 
 const Calendar = ({ data, eventsData }) => {
@@ -94,8 +93,8 @@ const Calendar = ({ data, eventsData }) => {
                 {event.dy === day &&
                 event.mon === currMonth &&
                 event.yr === year ? (
-                  <div>
-                    {event.name} from {event.strt} to {event.ending}
+                  <div className="calendar-event-details">
+                    {event.name?.length < 15 ? event?.name : `${event.name?.slice(0, 13)}...`} from {event.strt} to {event.ending}
                   </div>
                 ) : null}
               </div>
@@ -104,7 +103,7 @@ const Calendar = ({ data, eventsData }) => {
               (event) =>
                 event.dy === day && event.mon === currMonth && event.yr === year
             ) ? (
-              <div>No events.</div>
+              <div className="calendar-event-details">No events.</div>
             ) : null}
           </div>
         ))}

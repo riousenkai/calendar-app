@@ -28,7 +28,7 @@ body {
 .calendar-grid {
   display: flex;
   flex-direction: column;
-  width: 100px;
+  width: 100%;
   padding: 1rem;
 }
 
@@ -207,7 +207,7 @@ textarea {
 }
 
 .edit-submit {
-  margin-top: 55px;
+  margin-top: 85px;
   align-self: center;
   justify-content: center;
   display: flex;
@@ -215,9 +215,33 @@ textarea {
   gap: 10px;
 }
 
-.edit-form input, .edit-form textarea, .edit-form input:focus,
+.edit-form input,
+.edit-form textarea,
+.edit-form input:focus,
 .edit-form textarea:focus {
   background-color: #6898ffab;
   border: none;
   outline: none;
+}
+
+.calendar-event-details {
+  font-size: 14px;
+}
+
+.errors {
+  position: fixed;
+  font-size: 12px;
+  margin-top: 185px;
+  margin-left: -45px;
+  color: red;
+  max-width: 300px;
+  word-break: normal;
+}
+
+li {
+  list-style: none;
+}
+
+.edit-time {
+  margin: 5px 0;
 }
