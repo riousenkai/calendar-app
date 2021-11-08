@@ -37,6 +37,7 @@ body {
   display: flex;
   flex-direction: column;
   width: 90%;
+  margin-bottom: 10px;
 }
 
 .calendar-right::-webkit-scrollbar {
@@ -333,6 +334,7 @@ li {
 .date-jump {
   display: flex;
   gap: 8px;
+  margin-bottom: 10px;
 }
 
 .date-select {
