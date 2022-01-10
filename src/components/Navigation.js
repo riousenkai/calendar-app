@@ -121,7 +121,7 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
     setEventDate(new Date());
     setEventStart("09:00");
     setEventEnd("09:30");
-    setNotVisible(true)
+    setNotVisible(true);
   };
 
   return (
@@ -166,7 +166,9 @@ const Navigation = ({ users, setEventsData, eventsData }) => {
             minDate={new Date()}
             onChange={(e) => setEventDate(e)}
           />
-          <p className="event-form-label">Start Date (from 9:00 am - 4:59 pm)</p>
+          <p className="event-form-label">
+            Start Date (from 9:00 am - 4:59 pm)
+          </p>
           <input
             className="event-time"
             value={eventStart}
